@@ -75,8 +75,8 @@ quebras<-c(-100,-50,0,50,100,150,200,250)
 #Elaborando Mapas
 
 ##Lista com nomes de saída dos mapas
-saida = paste0("tx_dif_", 2005:2017, ".png")
-
+saida = unlist(paste0("tx_dif_", 2005:2017, ".png"))
+atributo=x_v
 ##Tentativa 1 (loop)
 for(i in 1:13){
   
@@ -87,18 +87,18 @@ for(i in 1:13){
   tm_shape(map_ICMS,
            unit ="km") +
     tm_fill( atributo , 
-             title = "Taxa da Diferenca",
+             title = "Mudança % na cota-parte",
              style = "fixed",
              breaks = quebras,
              n=5,
-             palette="RdBu",
+             palette="RdYlBu",
              midpoint = NA,
              contrast=0.9,
              #legend.reverse = T,
              #
              legend.format = list(fun = function(x) paste0("",
                                                            formatC(x, digits = 2, format = "f",)),
-                                  text.separator="-"),
+                                  text.separator="até"),
              border.col = "white", 
              border.alpha = 0.5) +
     tm_layout(inner.margins = c(0.06, 0.10, 0.10, 0.08))+
@@ -111,7 +111,9 @@ for(i in 1:13){
   dev.off()
 }
 
-?png
+
+
+
 
  
 png(filename = "ano_2017.png", w = 12, h = 8, units = "in", res = 320)
