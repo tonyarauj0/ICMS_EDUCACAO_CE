@@ -1,4 +1,4 @@
-setwd("C:/Users/Tony/Documents/Guilherme")
+setwd("C:/Users/Tony/Documents/Guilherme/Git/ICMS_EDUCACAO_CE")
 
 getwd()
 
@@ -9,24 +9,24 @@ library(readxl)
 # Importando uma worksheet para um dataframe
 df_ICMS_w <- read_excel("cotaparte_resultados_wide.xlsx", col_names=TRUE)
 str(df_ICMS_w)
-##Deixando variaveis em percentual
-names(df_ICMS_w)
-
+#Deixando variaveis em percentual
 library(tidyverse)
-
+library(dbplyr)
+##Variaveis
+names(df_ICMS_w)
+##Criando lista com nome das variaveis
 x = paste0("txdif", 2005:2017)
-
-for(i in 1:13){
-  nova=x[i]
-  df_ICMS_w %>% group_by(cod_mun) %>%
-    mutate(nova=nova*100)
-}
-
-
+##Transformando a lista em um vetor
+x_v<-unlist(x)
+##Definindo a operaçao a ser feita
+operacao<-function(x) x*100
+##Deixando variaveis em percentual
+df_ICMS_w<-mutate_at(df_ICMS_w,x_v,operacao)
 
 
-df_ICMS_w[grep("txdif",names(df_ICMS_w))]*100
 
+
+("dbplyr")
 library(rgdal)
 library(raster)
 library(colorspace)
