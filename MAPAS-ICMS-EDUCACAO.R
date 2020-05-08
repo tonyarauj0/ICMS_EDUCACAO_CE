@@ -23,10 +23,11 @@ operacao<-function(x) x*100
 ##Deixando variaveis em percentual
 df_ICMS_w<-mutate_at(df_ICMS_w,x_v,operacao)
 
+#Encerrando pacotes
+detach(package:dplyr)
+detach(package:tidyverse)
 
-
-
-("dbplyr")
+#Carregando pacotes para mapas
 library(rgdal)
 library(raster)
 library(colorspace)
@@ -41,38 +42,42 @@ names(ce)
 plot(ce)
 
 #Mapa ICMS
+
+##Juntando Atributos com o mapa
 map_ICMS<-merge(ce, df_ICMS_w,
                 by.x="codigo_ibg",
                 by.y="cod_mun",
                 duplicate.Geoms=TRUE)#Juntando atributo e shape
 
-?tm_shape
-?tm_fill
-x = paste0("txdif", 2005:2017)
-saida = paste0("tx_dif_", 2005:2017, ".png")
+##OBS: Definir valor maximo e minimo do atributo
 
-#OBS: Definir valor maximo e minimo do atributo
-##Selecionando as posicoes das colunas 
+###Selecionando as posicoes das colunas 
 
 grep("txdif",colnames(df_ICMS_w))
 
-##Criando lista de minimos 
+###Criando lista de minimos 
 minimos<-apply(df_ICMS_w[,
         c(9,17,25,33,41,49,57,65,73,81,89,97,105)],
         2,min)
-##Valor minimo
+###Valor minimo
 min(minimos)
 
-##Criando lista de  maximos
+###Criando lista de  maximos
 maximos<-apply(df_ICMS_w[,
                          c(9,17,25,33,41,49,57,65,73,81,89,97,105)],
                2,max)
-##Valor maximos
+###Valor maximos
 max(maximos)
 
-#Os valores da legenda serão distribuidos em 4 classes:-1 ate 0; 0 ate 1, 1 ate 2, acima de 2.
-quebras<-c(-1,-0.5,0,0.5,1,1.5,2,2.5)
+##Os valores da legenda serão distribuidos em 4 classes:-1 ate 0; 0 ate 1, 1 ate 2, acima de 2.
+quebras<-c(-100,-50,0,50,100,150,200,250)
 
+#Elaborando Mapas
+
+##Lista com nomes de saída dos mapas
+saida = paste0("tx_dif_", 2005:2017, ".png")
+
+##Tentativa 1 (loop)
 for(i in 1:13){
   
   atributo = x[13]
