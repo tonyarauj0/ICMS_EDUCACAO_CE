@@ -94,10 +94,11 @@ for(i in 1:13){
              palette="RdYlBu",
              midpoint = NA,
              contrast=0.9,
+             interval.closure="right",
              #legend.reverse = T,
              #
              legend.format = list(fun = function(x) paste0("",
-                                                           formatC(x, digits = 2, format = "f",)),
+                                                           formatC(x, digits = 0, format = "f",)),
                                   text.separator="até"),
              border.col = "white", 
              border.alpha = 0.5) +
@@ -120,24 +121,20 @@ png(filename = "ano_2017.png", w = 12, h = 8, units = "in", res = 320)
 tm_shape(map_ICMS,
            unit ="km") +
     tm_fill( "txdif2017", 
-             title = "Mudança % na cota-parte",
+             title = "Ganho na cota-parte",
              style = "fixed",
              breaks = quebras,
-             n=5,
              palette="RdYlBu",
-             midpoint = NA,
              contrast=0.9,
              interval.closure="right",
-             #legend.reverse = T,
-             #
-             legend.format = list(fun = function(x) paste0("",
-                                                           formatC(x, digits = 2, format = "f",)),
-                                  text.separator="até"),
-             border.col = "white", 
-             border.alpha = 0.5) +
-    tm_layout(inner.margins = c(0.06, 0.10, 0.10, 0.08))+
-    tm_legend(legend.position = c("right", "bottom"), scale=1,
-              legend.outside.size=T) +
+             midpoint = NA,
+             legend.hist=TRUE)
+            +
+  tm_layout(legend.outside = TRUE,
+            legend.outside.position = "right",
+            title = "Mudança Percentual na cota-parte com a Lei 14.023/07",
+            title.size = 0.5,
+            title.position = c("right","bottom"))+
         tm_borders()
   dev.off()
 
