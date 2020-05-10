@@ -74,71 +74,83 @@ quebras<-c(-100,-50,0,50,100,150,200,250)
 
 #Elaborando Mapas
 
-##Lista com nomes de saída dos mapas
-saida = unlist(paste0("tx_dif_", 2005:2017, ".png"))
-atributo=x_v
-##Tentativa 1 (loop)
-for(i in 1:13){
-  
-  atributo = x[13]
-  output = saida[13]
-  
-  png(filename = output, w = 12, h = 8, units = "in", res = 320)
-  tm_shape(map_ICMS,
-           unit ="km") +
-    tm_fill( atributo , 
-             title = "Mudança % na cota-parte",
-             style = "fixed",
-             breaks = quebras,
-             n=5,
-             palette="RdYlBu",
-             midpoint = NA,
-             contrast=0.9,
-             interval.closure="right",
-             #legend.reverse = T,
-             #
-             legend.format = list(fun = function(x) paste0("",
-                                                           formatC(x, digits = 0, format = "f",)),
-                                  text.separator="até"),
-             border.col = "white", 
-             border.alpha = 0.5) +
-    tm_layout(inner.margins = c(0.06, 0.10, 0.10, 0.08))+
-    tm_legend(legend.position = c("right", "bottom"), scale=1,
-              legend.outside.size=T) +
-    tm_compass(type = "4star", size = 2.5, text.size = 0.5,
-               color.dark = "gray60", text.color = "gray60",
-               position = c("right", "top")) +
-    tm_borders()
-  dev.off()
-}
-
-#Definindo cores azuis para maiores que zero e vermelhas para menores
+##Definindo cores azuis para maiores que zero e vermelhas para menores
 library(RColorBrewer)
 brewer.pal(n=11, "RdBu") #nomes das cores
 display.brewer.pal(n=11, "RdBu") #visualizar as cores
+brewer.pal(n=9, "Blues") #nomes das cores azuis
+display.brewer.pal(n=9, "Blues") #visualizar as cores azuis
 
-cores<-c("#67001F", "#B2182B",#cores vermelhas
-         "#92C5DE","#4393C3","#2166AC","#053061") #cores azuis
-png(filename = "ano_2017.png", w = 12, h = 8, units = "in", res = 320)
-tm_shape(map_ICMS,
+
+cores<-c("#B2182B", "#F4A582",#cores vermelhas
+         "#C6DBEF","#6BAED6","#2171B5","#08306B") #cores azuis
+
+#MAPA
+map_2009<-tm_shape(map_ICMS,
          unit ="km") +
-  tm_fill( "txdif2017", 
-           title = "Ganho na cota-parte",
+  tm_fill( "txdif2009", 
+           title = "Mudança Percentual na cota-parte com a Lei 14.023/07",
            style = "fixed",
            breaks = quebras,
            palette=cores,
            contrast=0.9,
            interval.closure="right",
            midpoint = NA,
+           text.separator= "até",
            legend.hist=TRUE)+
   tm_layout(legend.outside = TRUE,
             inner.margins = c(0.06, 0.10, 0.10, 0.08),
-            legend.outside.position = "right",
-            title = "Mudança Percentual na cota-parte com a Lei 14.023/07",
-            title.size = 0.5,
-            title.position = c("right","bottom"))+
-  tm_borders()
+            legend.outside.position = c("right","bottom"),
+            title.size = 0.8,
+            title.position = c("right","bottom"),
+            legend.position =c("right","bottom"),
+            legend.hist.width=0.8,
+            legend.format =list(text.separator="até"))+
+  tm_borders("grey40", lwd=2)
 dev.off()
+
+#Salvando o mapa
+tmap_save(map_2009, filename = "map_2009.png",
+          width = 12, height = 8, units = "in", dpi =  320)
+
+
+##Lista com nomes de saída dos mapas
+entrada = paste0("txdif", 2005:2017)
+saida = paste0("tx_dif_", 2005:2017, ".png")
+
+##Tentativa 1 (loop)
+for(i in 1:13){
+  
+  atributo = entrada[i]
+  output = saida[i]
+  
+  #MAPA
+  atributo<-tm_shape(map_ICMS,
+                     unit ="km") +
+    tm_fill( atributo, 
+             title = "Mudança Percentual na cota-parte com a Lei 14.023/07",
+             style = "fixed",
+             breaks = quebras,
+             palette=cores,
+             contrast=0.9,
+             interval.closure="right",
+             midpoint = NA,
+             text.separator= "até",
+             legend.hist=TRUE)+
+    tm_layout(legend.outside = TRUE,
+              inner.margins = c(0.06, 0.10, 0.10, 0.08),
+              legend.outside.position = c("right","bottom"),
+              title.size = 0.8,
+              title.position = c("right","bottom"),
+              legend.position =c("right","bottom"),
+              legend.hist.width=0.8)+
+    tm_borders("grey40", lwd=2)
+ dev.off()
+  
+  #Salvando o mapa
+  tmap_save(atributo, filename = "output",
+            width = 12, height = 8, units = "in", dpi =  320)
+}
 
 
 
