@@ -112,30 +112,36 @@ for(i in 1:13){
   dev.off()
 }
 
+#Definindo cores azuis para maiores que zero e vermelhas para menores
+library(RColorBrewer)
+brewer.pal(n=11, "RdBu") #nomes das cores
+display.brewer.pal(n=11, "RdBu") #visualizar as cores
 
-
-
-
- 
+cores<-c("#67001F", "#B2182B",#cores vermelhas
+         "#92C5DE","#4393C3","#2166AC","#053061") #cores azuis
 png(filename = "ano_2017.png", w = 12, h = 8, units = "in", res = 320)
 tm_shape(map_ICMS,
-           unit ="km") +
-    tm_fill( "txdif2017", 
-             title = "Ganho na cota-parte",
-             style = "fixed",
-             breaks = quebras,
-             palette="RdYlBu",
-             contrast=0.9,
-             interval.closure="right",
-             midpoint = NA,
-             legend.hist=TRUE)
-            +
+         unit ="km") +
+  tm_fill( "txdif2017", 
+           title = "Ganho na cota-parte",
+           style = "fixed",
+           breaks = quebras,
+           palette=cores,
+           contrast=0.9,
+           interval.closure="right",
+           midpoint = NA,
+           legend.hist=TRUE)+
   tm_layout(legend.outside = TRUE,
+            inner.margins = c(0.06, 0.10, 0.10, 0.08),
             legend.outside.position = "right",
             title = "Mudança Percentual na cota-parte com a Lei 14.023/07",
             title.size = 0.5,
             title.position = c("right","bottom"))+
-        tm_borders()
-  dev.off()
+  tm_borders()
+dev.off()
+
+
+
+
 
 
